@@ -80,8 +80,8 @@ end
 # create_new_csv(new_db_file, movie_array)
 # puts movie_array
 imdb = FilmBuff::IMDb.new
-movie = imdb.find_by_id('tt0326429')
-print [movie.title, "http://www.imdb.com/title/tt0326429", "tt0326429", "07/2011", movie.tagline, movie.plot, movie.runtime, movie.rating, movie.votes, movie.poster_url, movie.genres.join(", "), movie.release_date].join(",")
+movie = imdb.find_by_id('tt0427152')
+print [movie.title, "http://www.imdb.com/title/tt0427152", "tt0427152", "01/2011", movie.tagline, movie.plot, movie.runtime, movie.rating, movie.votes, movie.poster_url, movie.genres.join(", "), movie.release_date].join(",")
 
 
 
