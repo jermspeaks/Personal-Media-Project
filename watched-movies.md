@@ -112,7 +112,7 @@
 ### March 2011
 * Pontypool
 * The Green Hornet
-* The ### September Issue
+* The September Issue
 * 28 Days Later
 * Watchmen
 
