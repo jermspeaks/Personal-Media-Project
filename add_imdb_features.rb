@@ -1,7 +1,7 @@
 require 'filmbuff'
 require 'csv'
 
-db_file = "./test.csv"
+db_file = "./watched-movies.csv"
 new_db_file = "./sample.csv"
 movie_array = []
 
@@ -34,24 +34,35 @@ def read_csv(file, movie_array)
     imdb_link = row['imdb_link']
     imdb_id = row['imdb_id']
 
-    record = imdb.find_by_id(imdb_id)
+    begin
+      record = imdb.find_by_id(imdb_id)
 
-    movie = Movie.new({
-      'movie_title' => record.title,
-      'imdb_link' => imdb_link,
-      'imdb_id' => imdb_id,
-      'date' => date,
-      'tagline' => record.tagline,
-      'plot' => record.plot,
-      'runtime' => record.runtime,
-      'rating' => record.rating,
-      'votes' => record.votes,
-      'poster_url' => record.poster_url,
-      'genres' => record.genres.join(", "),
-      'release_date' => record.release_date
-    })
+      movie = Movie.new({
+        'movie_title' => record.title,
+        'imdb_link' => imdb_link,
+        'imdb_id' => imdb_id,
+        'date' => date,
+        'tagline' => record.tagline,
+        'plot' => record.plot,
+        'runtime' => record.runtime,
+        'rating' => record.rating,
+        'votes' => record.votes,
+        'poster_url' => record.poster_url,
+        'genres' => record.genres.join(", "),
+        'release_date' => record.release_date
+      })
 
-    puts "Title: #{movie.title}, Release Date: #{movie.release_date}"
+      puts "Title: #{movie.title}, Release Date: #{movie.release_date}"
+    rescue
+      movie = Movie.new({
+        'movie_title' => title,
+        'imdb_link' => imdb_link,
+        'imdb_id' => imdb_id,
+        'date' => date
+      })
+      puts "Something went wrong for #{movie.title}"
+    end
+
     movie_array.push(movie)
   end
 end
