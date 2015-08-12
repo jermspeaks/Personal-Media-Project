@@ -6,8 +6,8 @@ Jeremy's personal media project. Every film I've watched since January 2010. Eve
 
 I created a markdown version of my list I've been manually adding for years. I also converted it into a csv file via some ruby scripts that you can find here as well.
 
-* [Markdown File](./watched-movies.md)
+* [Markdown File](./Movies/watched-movies.md)
 
 ## Books
 
-TBA
+* [Markdown File](./Books/read-books.md)
