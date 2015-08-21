@@ -1,0 +1,23 @@
+{
+  "name": "personal-media-project",
+  "version": "1.0.0",
+  "description": "A personal collection of media read, listened to, watched",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jermspeaks/Personal-Media-Project.git"
+  },
+  "keywords": [
+    "media",
+    "personal"
+  ],
+  "author": "Jeremy Wong (jeremy@craftbyzen.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jermspeaks/Personal-Media-Project/issues"
+  },
+  "homepage": "https://github.com/jermspeaks/Personal-Media-Project#readme"
+}
