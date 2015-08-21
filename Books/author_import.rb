@@ -1,13 +1,14 @@
 require "csv"
 require "goodreads"
 
-DB_FILE = "./export-new.csv"
-EXPORT_DB_FILE = "./export.csv"
+OTHER_DB_FILE = "./export-new.csv"
+DB_FILE = "./export.csv"
+EXPORT_DB_FILE = "./books.csv"
 class Book
   attr_accessor :title, :goodreads_id, :isbn, :isbn13, :asin, :image_url, :publication_year, :publication_month, :publication_day, :publisher, :language_code, :description, :work, :num_pages, :book_format, :url, :link, :authors, :series_works
   def initialize(args = {})
     @title = args['book_title']
-    @goodreads_id = args['id']
+    @goodreads_id = args['goodreads_id']
     @isbn = args['isbn']
     @isbn13 = args['isbn13']
     @image_url = args['image_url']
@@ -80,15 +81,29 @@ def read_csv(file)
   reading_list
 end
 
-def export_csv(file, books_array)
+def grab_goodreads_id(file)
+  id_list = []
+  CSV.foreach(file, :headers => true) do |row|
+    id_list << row["goodreads_id"]
+  end
+  id_list
+end
+
+def export_csv(file, books_array, goodreads_ids)
+  index = 0
+
   CSV.open(file, "wb", :write_headers=> true, :headers => ["book_title", "goodreads_id", "isbn", "isbn13", "image_url", "publication_year", "publication_month", "publication_day", "publisher", "language_code", "description", "num_pages", "format", "url", "link", "authors"]) do |csv|
     books_array.each do |book|
       puts "exporting #{book.title}"
-      csv << [book.title, book.goodreads_id, book.isbn, book.isbn13, book.image_url, book.publication_year, book.publication_month, book.publication_day, book.publisher, book.language_code, book.description, book.num_pages, book.book_format, book.url, book.link, book.authors]
+      puts "exporting #{goodreads_ids[index]}"
+      csv << [book.title, goodreads_ids[index], book.isbn, book.isbn13, book.image_url, book.publication_year, book.publication_month, book.publication_day, book.publisher, book.language_code, book.description, book.num_pages, book.book_format, book.url, book.link, book.authors]
+      index = index + 1
     end
   end
 end
 
+ids = grab_goodreads_id(OTHER_DB_FILE)
 bookshelf = read_csv(DB_FILE)
-add_book_details(bookshelf)
-export_csv(EXPORT_DB_FILE, bookshelf)
+export_csv(EXPORT_DB_FILE, bookshelf, ids)
+# add_book_details(bookshelf)
+# export_csv(EXPORT_DB_FILE, bookshelf)
