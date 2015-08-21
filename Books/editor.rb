@@ -1,10 +1,10 @@
 require "csv"
 require "goodreads"
 
-DB_FILE = "./list.csv"
-EXPORT_DB_FILE = "./export.csv"
+DB_FILE = "./export.csv"
+EXPORT_DB_FILE = "./export-new.csv"
 class Book
-	attr_accessor :title, :isbn, :description
+	attr_accessor :title, :goodreads_id, :isbn, :isbn13, :asin, :image_url, :publication_year, :publication_month, :publication_day, :publisher, :language_code, :description, :work, :num_pages, :book_format, :url, :link, :authors, :series_works
   def initialize(args = {})
     @title = args['book_title']
     @goodreads_id = args['id']
@@ -20,7 +20,7 @@ class Book
     @description = args['description']
     @work = args['work']
     @num_pages = args['num_pages']
-    @format = args['format']
+    @book_format = args['format']
     @url = args['url']
     @link = args['link']
     @authors = args['authors']
@@ -32,64 +32,69 @@ def create_goodreads_client
   Goodreads::Client.new(:api_key => 'Z0CC2Sg1ZL5I9vHbHrdBfg', :api_secret => 'LZP8vOsOMS5g0YdbiNW1XGk3SpYLezQYi3DmI3UZo')
 end
 
-def fetch_books(books)
-  book_objects = []
+def add_book_details(books)
   goodreads_client = create_goodreads_client()
-    books.each do |isbn|
-      begin
-        puts "Looking for: #{isbn}..."
-        goodreads_book = goodreads_client.book_by_isbn(isbn)
+  books.map do |book|
+    puts "Looking for: #{book.title}..."
 
-        print goodreads_book.to_hash.keys
-        print "\n"
-
-        authors = goodreads_book.authors.author.map do |author|
-          author.name
-        end
-
-        puts "Found book on Goodreads: #{goodreads_book.title}"
-        created_book = Book.new({
-          'book_title' => goodreads_book.title,
-          'isbn' => goodreads_book.isbn,
-          'description' => goodreads_book.description,
-        })
-        book_objects << created_book
-      rescue
-        # book_objects << Book.new({
-        #   'book_title' => title
-        # })
-        puts "Couldn't find book #{isbn}"
-      end
+    if book.isbn
+      goodreads_book = goodreads_client.book_by_isbn(book.isbn)
+    else
+      goodreads_book = goodreads_client.book_by_title(book.title)
     end
-  return book_objects
+
+    puts "Found book on Goodreads: #{goodreads_book.title}"
+
+    book.goodreads_id = goodreads_book.id
+    book.isbn13 = goodreads_book.isbn13
+    book.asin = goodreads_book.asin
+    book.image_url = goodreads_book.image_url
+    book.publication_year = goodreads_book.publication_year
+    book.publication_month = goodreads_book.publication_month
+    book.publication_day = goodreads_book.publication_day
+    book.publisher = goodreads_book.publisher
+    book.language_code = goodreads_book.language_code
+
+    if !book.description
+      book.description = goodreads_book.description
+    end
+
+    book.work = goodreads_book.work
+    book.num_pages = goodreads_book.num_pages
+    book.book_format = goodreads_book.format
+    book.url = goodreads_book.url
+    book.link = goodreads_book.link
+
+    book.authors = goodreads_book.authors.author.map { |author| author.name }
+    # puts "Authors: #{book.authors}"
+
+    book.series_works = goodreads_book.series_works
+    book
+  end
 end
 
-# Read through CSV file and push movie into movie_array
+# Read through CSV file and push book into reading_list
 def read_csv(file)
   reading_list = []
   CSV.foreach(file, :headers => true) do |row|
-    reading_list << row['title']
+    reading_list << Book.new({
+      'book_title' => row['book_title'],
+      'isbn' => row['isbn'],
+      'description' => row['description']
+    })
   end
   reading_list
 end
 
 def export_csv(file, books_array)
-  CSV.open(file, "wb", :write_headers=> true, :headers => ["book_title", "isbn", "description"]) do |csv|
+  CSV.open(file, "wb", :write_headers=> true, :headers => ["book_title", "goodreads_id", "isbn", "isbn13", "asin", "image_url", "publication_year", "publication_month", "publication_day", "publisher", "language_code", "description", "work", "num_pages", "format", "url", "link", "authors", "series_works"]) do |csv|
     books_array.each do |book|
       puts "exporting #{book.title}"
-      csv << [book.title, book.isbn, book.description]
+      csv << [book.title, book.goodreads_id, book.isbn, book.isbn13, book.asin, book.image_url, book.publication_year, book.publication_month, book.publication_day, book.publisher, book.language_code, book.description, book.work, book.num_pages, book.book_format, book.url, book.link, book.authors, book.series_works]
     end
   end
 end
 
-
-test_book_array = ['0307463745']
-bookshelf = fetch_books(test_book_array)
-
-# book_array = read_csv(DB_FILE)
-# bookshelf = fetch_books(book_array)
-bookshelf.each do |book|
-  puts "Title: #{book.title} | ISBN: #{book.isbn}"
-  puts "Description: #{book.description}"
-end
-# export_csv(EXPORT_DB_FILE, bookshelf)
+bookshelf = read_csv(DB_FILE)
+add_book_details(bookshelf)
+export_csv(EXPORT_DB_FILE, bookshelf)
