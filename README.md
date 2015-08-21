@@ -13,3 +13,7 @@ I created a markdown version of my list I've been manually adding for years. I a
 
 * [Markdown File](./Books/read-books.md)
 * [CSV File](./Books/books.csv)
+
+## Web App Interface
+
+I'm currently testing out React with Flux right now. I'm trying to figure out how to get Webpack to play nice with Flux and it's going to be a learning curve. Thankfully there's enough tutorials to help get me started.
