@@ -18,13 +18,11 @@ class Book
     @publisher = args['publisher']
     @language_code = args['language_code']
     @description = args['description']
-    @work = args['work']
     @num_pages = args['num_pages']
     @book_format = args['format']
     @url = args['url']
     @link = args['link']
     @authors = args['authors']
-    @series_works = args['series_works']
   end
 end
 
@@ -59,16 +57,16 @@ def add_book_details(books)
       book.description = goodreads_book.description
     end
 
-    book.work = goodreads_book.work
     book.num_pages = goodreads_book.num_pages
     book.book_format = goodreads_book.format
     book.url = goodreads_book.url
     book.link = goodreads_book.link
 
-    book.authors = goodreads_book.authors.author.map { |author| author.name }
-    # puts "Authors: #{book.authors}"
+    authors = goodreads_book.authors.author.map do |author|
+      author.name if author.respond_to?(:name)
+    end
+    book.authors = authors.join(", ")
 
-    book.series_works = goodreads_book.series_works
     book
   end
 end
@@ -87,10 +85,10 @@ def read_csv(file)
 end
 
 def export_csv(file, books_array)
-  CSV.open(file, "wb", :write_headers=> true, :headers => ["book_title", "goodreads_id", "isbn", "isbn13", "asin", "image_url", "publication_year", "publication_month", "publication_day", "publisher", "language_code", "description", "work", "num_pages", "format", "url", "link", "authors", "series_works"]) do |csv|
+  CSV.open(file, "wb", :write_headers=> true, :headers => ["book_title", "goodreads_id", "isbn", "isbn13", "asin", "image_url", "publication_year", "publication_month", "publication_day", "publisher", "language_code", "description", "num_pages", "format", "url", "link", "authors"]) do |csv|
     books_array.each do |book|
       puts "exporting #{book.title}"
-      csv << [book.title, book.goodreads_id, book.isbn, book.isbn13, book.asin, book.image_url, book.publication_year, book.publication_month, book.publication_day, book.publisher, book.language_code, book.description, book.work, book.num_pages, book.book_format, book.url, book.link, book.authors, book.series_works]
+      csv << [book.title, book.goodreads_id, book.isbn, book.isbn13, book.asin, book.image_url, book.publication_year, book.publication_month, book.publication_day, book.publisher, book.language_code, book.description, book.num_pages, book.book_format, book.url, book.link, book.authors]
     end
   end
 end
