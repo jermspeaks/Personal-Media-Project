@@ -1,19 +1,16 @@
-var fs = require('fs');
-var bookFile = __dirname + '/Books/books.json';
-var movieFile = __dirname + '/Movies/watched-movies.json';
+window.React = require('react');
+var ProductData = require('./src/data');
+// var CartAPI = require('./utils/CartAPI')
+// var FluxCartApp = require('./components/FluxCartApp.react');
 
-function readFiles(file) {
-  fs.readFile(file, 'utf8', function (err, data) {
-    if (err) {
-      console.log('Error: ' + err);
-      return;
-    }
+// Load Mock Product Data into localStorage
+ProductData.init();
 
-    data = JSON.parse(data);
+// Load Mock API Call
+CartAPI.getProductData();
 
-    console.dir(data[0]);
-  });
-}
-
-readFiles(bookFile);
-readFiles(movieFile);
+// Render FluxCartApp Controller View
+React.render(
+  <FluxCartApp />,
+  document.getElementById('flux-cart')
+);
