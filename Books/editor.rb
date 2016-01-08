@@ -96,10 +96,10 @@ def read_csv(file)
 end
 
 def export_csv(file, books_array)
-  CSV.open(file, "wb", :write_headers=> true, :headers => ["book_title", "read_date", "goodreads_id", "isbn", "isbn13", "asin", "image_url", "publication_year", "publication_month", "publication_day", "publisher", "language_code", "description", "work", "num_pages", "format", "url", "link", "authors"]) do |csv|
+  CSV.open(file, "wb", :write_headers=> true, :headers => ["book_title", "read_date", "goodreads_id", "isbn", "isbn13", "image_url", "publication_year", "publication_month", "publication_day", "publisher", "language_code", "description", "num_pages", "format", "url", "link", "authors"]) do |csv|
     books_array.each do |book|
       puts "exporting #{book.title}"
-      csv << [book.title, book.read_date, book.goodreads_id, book.isbn, book.isbn13, book.asin, book.image_url, book.publication_year, book.publication_month, book.publication_day, book.publisher, book.language_code, book.description, book.work, book.num_pages, book.book_format, book.url, book.link, book.authors]
+      csv << [book.title, book.read_date, book.goodreads_id, book.isbn, book.isbn13, book.image_url, book.publication_year, book.publication_month, book.publication_day, book.publisher, book.language_code, book.description, book.num_pages, book.book_format, book.url, book.link, book.authors]
     end
   end
 end
