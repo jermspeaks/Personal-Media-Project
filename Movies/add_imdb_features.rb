@@ -1,8 +1,8 @@
 require 'filmbuff'
 require 'csv'
 
-db_file = "./watched-movies.csv"
-new_db_file = "./sample.csv"
+db_file = "./sample.csv"
+new_db_file = "./new-sample.csv"
 movie_array = []
 
 # Movie Object
@@ -76,12 +76,12 @@ def create_new_csv(file, movie_array)
   end
 end
 
-read_csv(db_file, movie_array)
-create_new_csv(new_db_file, movie_array)
-puts movie_array
-# imdb = FilmBuff::IMDb.new
-# movie = imdb.find_by_id('tt1247704')
-# print [movie.title, "http://www.imdb.com/title/tt1247704", "tt1247704", "01/2011", movie.tagline, movie.plot, movie.runtime, movie.rating, movie.votes, movie.poster_url, movie.genres.join(", "), movie.release_date].join(",")
+# read_csv(db_file, movie_array)
+# create_new_csv(new_db_file, movie_array)
+# puts movie_array
+imdb = FilmBuff::IMDb.new
+movie = imdb.find_by_id('tt3460252')
+print [movie.title, "http://www.imdb.com/title/tt3460252", "tt3460252", "11/2015", movie.tagline, movie.plot, movie.runtime, movie.rating, movie.votes, movie.poster_url, movie.genres.join(", "), movie.release_date].join(",")
 
 
 

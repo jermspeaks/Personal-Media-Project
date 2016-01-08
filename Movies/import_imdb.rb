@@ -26,6 +26,7 @@ def read_csv(file, movie_array)
   CSV.foreach(file, :headers => true) do |row|
     title = row['movie_title']
     begin
+      p title
       movie = imdb.find_by_title(row['movie_title'])
       if movie.imdb_id
         movie_array.push(Movie.new({
@@ -51,9 +52,11 @@ def create_new_csv(file, movie_array)
   end
 end
 
-read_csv(db_file, movie_array)
+# read_csv(db_file, movie_array)
 # create_new_csv(new_db_file, movie_array)
-puts movie_array
+movie = imdb.find_by_title('Reservoir Dogs');
+puts movie.title
+# puts movie_array
 # movie = Movie.new({
 #   'movie_title' => 'Casablanca',
 #   'imdb_id' => 'tt0099582',
