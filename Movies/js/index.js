@@ -1,4 +1,4 @@
-[
+var dump = [
     {
         "genres": "Comedy",
         "imdb_id": "tt0091042",
@@ -4735,3 +4735,21 @@
         "watched_date": "12/2015"
     }
 ]
+
+
+$( document ).ready(function() {
+  var items = [];
+  dump.forEach(function(movie) {
+    var html = "<li class='movie'>" +
+      "<span>" +
+      movie.movie_title + 
+      "</span>" +
+      "</li>";
+    items.push(html);
+  });
+ 
+  $( "<ul/>", {
+    "class": "my-new-list",
+    html: items.join( "" )
+  }).appendTo( "body" );
+});
